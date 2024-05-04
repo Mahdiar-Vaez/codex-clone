@@ -1,6 +1,7 @@
 import bot from "./assets/bot.svg";
 import user from "./assets/user.svg";
 const form = document.querySelector("form");
+
 const chatContainer = document.querySelector("#chat-container");
 let loadInterval;
 function loader(element) {
@@ -54,6 +55,28 @@ const handleSubmit=async (e)=>{
   chatContainer.scrollTop=chatContainer.scrollHeight;
   const messageDiv=document.getElementById(uniqueId)
   loader(messageDiv)
+  // bot response
+  const response=await fetch('http://localhost:5000',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({
+      prompt:data.get('prompt')
+    })
+  })
+  clearInterval(loadInterval)
+  messageDiv.innerHTML=''
+  if(response.ok){
+    const data=await response.json()
+    const parsedData=data.bot.trim()
+    typeText(messageDiv,parsedData)
+  }
+  else{
+    const err=await response.text();
+    messageDiv.innerHTML="Some thing went wrong"
+    alert(err)
+  }
 }
 form.addEventListener('submit',handleSubmit)
 form.addEventListener('keyup',(e)=>{
