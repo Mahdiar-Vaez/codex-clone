@@ -15,7 +15,7 @@ function loader(element) {
 
         // If the loading indicator has reached three dots, reset it
         if (element.textContent === '....') {
-            element.textContent = '';
+            element.textContent = ''
         }
     }, 300);
 }
